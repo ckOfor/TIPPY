@@ -60,3 +60,16 @@
     votes-against: uint
 })
 (define-data-var proposal-count uint u0)
+
+;; Create new proposal
+(define-public (create-proposal (title (string-ascii 64)) (voting-period uint))
+    (let ((proposal-id (+ (var-get proposal-count) u1)))
+        (map-set proposals proposal-id {
+            proposer: tx-sender,
+            title: title,
+            voting-ends: (+ block-height voting-period),
+            votes-for: u0,
+            votes-against: u0
+        })
+        (var-set proposal-count proposal-id)
+        (ok proposal-id)))
