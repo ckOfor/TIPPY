@@ -102,3 +102,13 @@
             active: true
         })
         (ok true)))
+
+;; Purchase token
+(define-public (purchase-listing (token-id uint))
+    (let ((listing (unwrap! (map-get? listings token-id) (err u1))))
+        (asserts! (get active listing) (err u2))
+        (try! (stx-transfer? (get price listing) tx-sender (get seller listing)))
+        (try! (transfer token-id (get seller listing) tx-sender))
+        (map-set listings token-id (merge listing { active: false }))
+        (try! (record-revenue token-id (get price listing)))
+        (ok true)))
