@@ -28,4 +28,16 @@
         (var-set last-token-id token-id)
         (ok token-id)))
 
+;; Transfer IP token
+(define-public (transfer (token-id uint) (sender principal) (recipient principal))
+    (begin
+        (asserts! (is-eq tx-sender sender) (err u2))
+        (try! (nft-transfer? ip-token token-id sender recipient))
+        (ok true)))
 
+;; Get token metadata
+(define-read-only (get-token-metadata (token-id uint))
+    (ok (map-get? token-metadata token-id)))
+
+;; Royalty Distribution Contract
+(define-map royalty-balances principal uint)
