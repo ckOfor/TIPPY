@@ -41,3 +41,22 @@
 
 ;; Royalty Distribution Contract
 (define-map royalty-balances principal uint)
+
+;; Record and distribute revenue
+(define-public (record-revenue (token-id uint) (amount uint))
+    (let ((royalty (default-to u0 (map-get? token-royalties token-id)))
+          (metadata (unwrap! (map-get? token-metadata token-id) (err u1)))
+          (creator (get creator metadata))
+          (royalty-amount (/ (* amount royalty) u100)))
+        (try! (stx-transfer? royalty-amount tx-sender creator))
+        (ok true)))
+
+;; Governance Contract
+(define-map proposals uint {
+    proposer: principal,
+    title: (string-ascii 64),
+    voting-ends: uint,
+    votes-for: uint,
+    votes-against: uint
+})
+(define-data-var proposal-count uint u0)
