@@ -84,3 +84,21 @@
             (map-set proposals proposal-id
                 (merge proposal { votes-against: (+ (get votes-against proposal) u1) })))
         (ok true)))
+
+;; Marketplace Contract
+(define-map listings uint {
+    seller: principal,
+    price: uint,
+    active: bool
+})
+
+;; Create listing
+(define-public (create-listing (token-id uint) (price uint))
+    (let ((owner (unwrap! (nft-get-owner? ip-token token-id) (err u1))))
+        (asserts! (is-eq tx-sender owner) (err u2))
+        (map-set listings token-id {
+            seller: tx-sender,
+            price: price,
+            active: true
+        })
+        (ok true)))
