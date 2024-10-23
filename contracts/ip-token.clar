@@ -73,3 +73,14 @@
         })
         (var-set proposal-count proposal-id)
         (ok proposal-id)))
+
+;; Vote on proposal
+(define-public (vote (proposal-id uint) (support bool))
+    (let ((proposal (unwrap! (map-get? proposals proposal-id) (err u1))))
+        (asserts! (< block-height (get voting-ends proposal)) (err u2))
+        (if support
+            (map-set proposals proposal-id
+                (merge proposal { votes-for: (+ (get votes-for proposal) u1) }))
+            (map-set proposals proposal-id
+                (merge proposal { votes-against: (+ (get votes-against proposal) u1) })))
+        (ok true)))
