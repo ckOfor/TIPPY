@@ -186,3 +186,4 @@ This implementation focuses on security, efficiency, and usability. Future impro
 - Additional governance features
 - Advanced royalty models
 - Integration with external IP registries
+
