@@ -40,5 +40,21 @@
     )
 )
 
+(define-public (update-reputation-token-minted (creator principal))
+    (let (
+        (current-rep (get-creator-reputation creator))
+    )
+    (begin
+        (asserts! (is-eq tx-sender contract-owner) ERR-NOT-AUTHORIZED)
+        (ok (map-set creator-reputations
+            { creator: creator }
+            (merge current-rep {
+                score: (+ (get score current-rep) u10),
+                tokens-minted: (+ (get tokens-minted current-rep) u1)
+            })
+        ))
+    ))
+)
+
 
 
