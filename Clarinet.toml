@@ -5,6 +5,11 @@ authors = []
 telemetry = true
 cache_dir = './.cache'
 requirements = []
+[contracts.creator-reputation]
+path = 'contracts/creator-reputation.clar'
+clarity_version = 2
+epoch = 2.5
+
 [contracts.ip-token]
 path = 'contracts/ip-token.clar'
 clarity_version = 2
