@@ -56,5 +56,21 @@
     ))
 )
 
+(define-public (update-reputation-sale (creator principal) (revenue uint))
+    (let (
+        (current-rep (get-creator-reputation creator))
+    )
+    (begin
+        (asserts! (is-eq tx-sender contract-owner) ERR-NOT-AUTHORIZED)
+        (ok (map-set creator-reputations
+            { creator: creator }
+            (merge current-rep {
+                score: (+ (get score current-rep) u5),
+                total-revenue: (+ (get total-revenue current-rep) revenue),
+                successful-sales: (+ (get successful-sales current-rep) u1)
+            })
+        ))
+    ))
+)
 
 
