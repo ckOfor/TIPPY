@@ -73,4 +73,22 @@
     ))
 )
 
+(define-public (adjust-reputation-score (creator principal) (adjustment int))
+    (let (
+        (current-rep (get-creator-reputation creator))
+        (current-score (get score current-rep))
+        (new-score (if (>= adjustment 0)
+                       (+ current-score (to-uint adjustment))
+                       (if (>= current-score (to-uint (- 0 adjustment)))
+                           (- current-score (to-uint (- 0 adjustment)))
+                           u0)))
+    )
+    (begin
+        (asserts! (is-eq tx-sender contract-owner) ERR-NOT-AUTHORIZED)
+        (ok (map-set creator-reputations
+            { creator: creator }
+            (merge current-rep { score: new-score })
+        ))
+    ))
+)
 
